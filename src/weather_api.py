@@ -26,9 +26,13 @@ def get_current_temp_gov(station_id):
     print(ujson.load(req.raw)['features'][0]['temperature'])
 
 def get_current_temp(lat, long):
-    req = urequests.get(f'https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={long}&current=temperature_2m&temperature_unit=fahrenheit')
-    if req.status_code != 200:
-        print(f'Status code: {req.status_code}')
-        print(req.text)
-        return None
-    return ujson.load(req.raw)['current']['temperature_2m']
+    try:
+        req = urequests.get(f'https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={long}&current=temperature_2m&temperature_unit=fahrenheit')
+        if req.status_code != 200:
+            print(f'Status code: {req.status_code}')
+            print(req.text)
+            return None
+        return ujson.load(req.raw)['current']['temperature_2m']
+    except Exception as e:
+        print(str(e))
+        return -99.0

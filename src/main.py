@@ -1,4 +1,5 @@
 import time
+boot = time.ticks_ms()
 
 from epaper import EPD_2in9_B
 import network
@@ -50,10 +51,6 @@ def deep(boot):
     machine.deepsleep(sleep_ms)
 
 if __name__ == '__main__':
-    
-    import time
-    boot = time.ticks_ms()
-
     try:
         execute()
 
@@ -68,8 +65,6 @@ if __name__ == '__main__':
                 line = line + 1
             screen.imageblack.text(str(err)[x], (x%35)*8, 2+line*10, 0x00)
         screen.display()
-        while(True):
-            time.sleep(5)
 
     deep(boot)
 
