@@ -1,14 +1,20 @@
 import time
 boot = time.ticks_ms()
 
+weather_lat = 34.1419
+weather_long = -84.2025
+SLEEP_MINUTES = 1 
+
+from machine import WDT
+wdt = WDT(timeout=(1*60+30)*1000)
+wdt.feed()
 from epaper import EPD_2in9_B
 import network
 import weather_api
 import machine
 
 
-weather_lat = 34.1419
-weather_long = -84.2025
+
 
 def execute():
     screen = EPD_2in9_B()
@@ -23,7 +29,6 @@ def execute():
         wlan.connect('BoringUniFi', 'pinetree4790')
         while not wlan.isconnected():
             pass
-
     ip_address, netmask, gateway, dns = wlan.ifconfig()
 
     outdoor = weather_api.get_current_temp(weather_lat, weather_long)
@@ -34,18 +39,16 @@ def execute():
     screen.imageblack.text("Gateway: " + gateway, 0, 12, 0x00)
     screen.imageblack.text(f'Outside Temperature:', 0, 50, 0x00)
     screen.imagered.text(f'{outdoor} F', 21*8, 50, 0x00)
-
     import util
     raw_time = util.get_time()
     year, month,day,h,m,s,_,_ = time.gmtime(raw_time)
     screen.imageblack.text(f'Last Update: {day:02d} {h:02d}:{m:02d}:{s:02d}', 0, 60, 0x00)
-
     screen.ReadBusy()
     screen.display()
     screen.sleep()
 
 def deep(boot):
-    sleep_ms = 1*60*1000 - time.ticks_diff(time.ticks_ms(), boot)
+    sleep_ms = SLEEP_MINUTES*60*1000 - time.ticks_diff(time.ticks_ms(), boot)
     if sleep_ms < 1:
         sleep_ms = 1
     machine.deepsleep(sleep_ms)
