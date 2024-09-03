@@ -6,10 +6,10 @@ import utime
 EPD_WIDTH       = 128
 EPD_HEIGHT      = 296
 
-RST_PIN         = 23
-DC_PIN          = 18
-CS_PIN          = 5
-BUSY_PIN        = 19
+RST_PIN         = 14
+DC_PIN          = 13
+CS_PIN          = 25
+BUSY_PIN        = 26
 
 class EPD_2in9_B:
     def __init__(self):
@@ -20,7 +20,7 @@ class EPD_2in9_B:
         self.width = EPD_WIDTH
         self.height = EPD_HEIGHT
         
-        self.spi = SPI(1)
+        self.spi = SPI(2)
         self.spi.init(baudrate=4000_000)
         self.dc_pin = Pin(DC_PIN, Pin.OUT)
         
