@@ -5,7 +5,7 @@ weather_lat = 34.1419
 weather_long = -84.2025
 SLEEP_MINUTES = 1 
 
-from machine import WDT, deepsleep
+from machine import WDT, deepsleep, Pin
 wdt = WDT(timeout=(1*60+30)*1000)
 wdt.feed()
 from epaper import EPD_2in9_B
@@ -14,6 +14,12 @@ import weather_api
 import util
 
 def execute():
+    # init temp sensor
+    t_pin = Pin(15, Pin.OUT)
+    t_pin.value(0)
+    time.sleep(0.04)
+    t_pin.value(1)
+
     screen = EPD_2in9_B()
     screen.init()
     #screen.Clear_Async(0xff,0xff)
@@ -44,6 +50,7 @@ def execute():
     screen.ReadBusy()
     screen.display()
     screen.sleep()
+    t_pin.value(0)
 
 def deep(boot):
     sleep_ms = SLEEP_MINUTES*60*1000 - time.ticks_diff(time.ticks_ms(), boot)
