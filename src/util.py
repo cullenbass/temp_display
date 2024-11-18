@@ -16,10 +16,11 @@ def get_time(connected):
                 return None
             dat = ujson.load(req.raw)
             raw_time = dat['unixtime'] + dat['raw_offset'] + dat['dst_offset']
+            dow = dat['day_of_week']
             offset = int((dat['raw_offset'] + dat['dst_offset']) /60/60)
             year,month,day,h,m,s,_,_ = gmtime(raw_time)
             year = year - 30
-            rtc.init((year, month, day, h, m, s, 0, 1))
+            rtc.init((year, month, day, dow, h, m, s, 0))
             return year, month, day, h, m, s
         
         except Exception as e:
